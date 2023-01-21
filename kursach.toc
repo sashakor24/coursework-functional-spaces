@@ -1,0 +1,6 @@
+\babel@toc {english}{}\relax 
+\contentsline {section}{\numberline {1.\relax }Введение}{1}{section.1}%
+\contentsline {section}{\numberline {2.\relax }Теория меры}{1}{section.2}%
+\contentsline {section}{\numberline {3.\relax }Интеграл Лебега}{3}{section.3}%
+\contentsline {section}{\numberline {4.\relax }Доказательство теоремы}{4}{section.4}%
+\contentsline {section}{\numberline {5.\relax }список литературы}{5}{section.5}%

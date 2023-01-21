@@ -1,0 +1,205 @@
+\documentclass[a4paper,14pt]{article}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+\usepackage{indentfirst}
+\usepackage{misccorr}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[left=3cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{hyperref}
+\usepackage{ulem}
+\usepackage{multicol}
+\addto\captionsenglish{\renewcommand*\contentsname{Оглавление}}
+
+\linespread{1.5}
+\setlength{\parindent}{1.25cm}
+%\everymath{\displaystyle}
+
+%\usepackage{url}
+
+%\hypersetup{
+%    colorlinks=true,
+%    linkcolor=blue,
+%    filecolor=magenta,      
+%    urlcolor=cyan,
+%    pdftitle={Sharelatex Example},
+%    bookmarks=true,
+%    pdfpagemode=FullScreen,
+%}
+
+\begin{document}
+
+\begin{titlepage}
+  \begin{center}
+МИНИСТЕРСТВО НАУКИ И ВЫСШЕГО ОБРАЗОВАНИЯ\\
+РОССИЙСКОЙ ФЕДЕРАЦИИ\\
+    
+Федеральное государственное автономное образовательное учреждение высшего образования\\
+"Российский университет дружбы народов"\\
+Факультет физико-математических и естественных наук\\
+Математический институт им. С.М. Никольского
+\vfill
+ 
+\textsc{Курсовая работа}\\[5mm]
+по дисциплине: "Дифференциальные уравнения"\\
+на тему:\\
+%"Решение модельной физической задачи на компьютере при помощи математических пакетов"
+"Решение задачи Коши методом Эйлера и методом Рунге-Кутты"
+\end{center}
+\vfill
+ 
+\newlength{\ML}
+\settowidth{\ML}{«\underline{\hspace{0.7cm}}» \underline{\hspace{2cm}}}
+\hfill\begin{minipage}{0.4\textwidth}
+  Выполнил:\\
+  Студент группы НМТбд-01-19
+  А.\,Д.~Коротков\\
+\end{minipage}
+
+\hfill\begin{minipage}{0.4\textwidth}
+  Руководитель курсовой работы:\\
+  профессор математического института им. С.М. Никольского\\
+  д.ф.-м.н., член-корреспондент РАН
+  Г.\,Г.~Лазарева\\
+\end{minipage}%
+\bigskip
+\vfill
+ 
+\begin{center}
+  Москва, 2021 г.
+\end{center}
+\end{titlepage}
+
+
+\pagenumbering{gobble}
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+
+\section{Введение}
+Пусть $\frac{1}{p}+\frac{1}{p'}=1,\  1\leq p\leq \infty$, $\mu$ - стандартная лебегова мера в $\mathbb{R}^n$ для некоторого $n\in \mathbb{N}$, E - множество, измеримое по $\mu$. Для $g \in L_{p'}(E)$ (вообще говоря, $L_{p'}(E),\ L_{p}(E)$ - пространства комплекснозначных функций) рассматривалась задача поиска нормы функционала $A_g:L_p(E)\rightarrow \mathbb{C}$ вида
+$A_g(f)=\int\limits_{E}fgd\mu$ $(f\in L_p(E))$. Было получено, что $||A_g||=||g||_{p'}$. В данной работе будет рассмотрен случай $g \not \in L_{p'}(E)$, $g$- измерима (то есть $(B(\mathbb{R}^n),B(\mathbb{C}))$ - измерима).
+
+Для начала напомним некоторые важные определения, которые мы будем использовать в дальнейшем, приведём теоремы, некоторые из которых докажем, на доказательство других сошлёмся, если будет удобно.
+
+%\section{Важные определения и теоремы}
+\section{Теория меры}
+%$\textbf{Опр.0}$ Пусть X - некоторое непустое множество, и $\Sigma$ - некоторая непустая система подмножеств множества X. Тогда система множеств $\Sigma$ называется:\newline
+%а) полукольцом множеств, если\newline
+%а.1) $\emptyset\in\Sigma$,\newline
+%а.2) $\forall A_0\in\Sigma,A\in\Sigma$ таких, что $A_0\subset A$, верно, что $\exists n\in\mathbb{N},\forall k\in\overline{1,n}\exists A_k\in\Sigma$ такие, что система $(A_k\in\Sigma|k\in\overline{0,n})$ состоит из попарно непересекающихся множеств, и $A=\bigsqcup\limits_{k=0}^n A_k$;\newline
+%б) кольцом множеств, если\newline
+%б.1) $\forall A\in\Sigma, \forall B\in\Sigma$ имеем $A\cap B\in\Sigma$,\newline
+%б.2) $\forall A\in\Sigma, \forall B\in\Sigma$ имеем $A\triangle B\in\Sigma$;\newline
+%в) алгеброй множеств, если
+%в.1) система $\Sigma$ является кольцом множеств
+%в.2) в $\Sigma$ есть единица $E$ (то есть $\forall A\in\Sigma$ выполнено $A\subset E$);
+%г) $\sigma$-кольцом множеств, если 
+
+$\textbf{Опр.1.}$ Пусть $X$ - некоторое множество, множество всех подмножеств множества $X$ обозначим как $2^X$. Тогда подмножество $\Sigma\subset 2^X$ называется $\sigma$-алгеброй, если\newline
+1. $X\in\Sigma$ (то есть X - единица системы $\Sigma$).\newline
+2. $\Sigma$ замкнуто относительно операции взятия дополнения: $\forall A\in\Sigma$ имеем $X\setminus A\in\Sigma$.\newline
+3. $\Sigma$ замкнуто относительно операции счётного объединения: для любой системы $(A_k\in\Sigma|k\in\mathbb{N})$ имеем $A=\bigcup\limits_{k\in\mathbb{N}} A_k\ \in\Sigma$\newline
+$\textbf{Опр.2.}$ Пусть $X$ - некоторое множество, $\mathcal{T}=\mathcal{T}_X\subset 2^X$ называется топологией на X, если\newline
+1. $\emptyset\in\mathcal{T},\ X\in\mathcal{T}$.\newline
+2. $\forall U_1,U_2\in\mathcal{T}$ имеем $U_1\bigcap U_2\in\mathcal{T}$.\newline
+3. Объединение произвольного семейства множеств, принадлежащих $\mathcal{T}$, принадлежит $\mathcal {T}$; то есть $\forall A,\ \forall(U_{\alpha}\in X|\alpha\in A)$ имеем $\bigcup\limits_{\alpha\in A} A_{\alpha}\ \in\mathcal{T}$.\newline
+Пара $(X,\mathcal{T}_X)$ называется топологическим пространством; если топология ясна из контекста, то будем писать просто $X$.\newline
+$\textbf{Опр.3.}$ Пусть X - топологическое пространство. Борелевская $\sigma$-алгебра $B(X)$ на $X$ - это $\sigma$-алгебра, состоящая из множеств, полученных операциями счётного объединения, счётного пересечения, разности множеств из $\mathcal{T}_X$.\newline
+$\textbf{Опр.4.}$ Пусть $W$ - некоторое множество, $\Sigma\subset 2^W$-$\sigma$-алгебра. Тогда функция $\mu:\Sigma\rightarrow\mathbb{R}\bigcup\{\infty\}$ называется мерой ($\sigma$-аддитивной) на $\sigma$-алгебре $\Sigma$, если она обладает следующими свойствами:\newline
+1. Неотрицательность. $\forall A\in\Sigma$ имеем $\mu(A)\geq 0$.\newline
+2. Счётная аддитивность ($\sigma$-аддитивность). Для любого счётного семейства попарно непересекающихся множеств $(A_k\in\Sigma|k\in\mathbb{N})$ имеем $\sum\limits_{k=0}^{\infty}\mu(A_k)=\mu(\bigsqcup\limits_{k=1}^{\infty} A_k)$.\newline
+Тройку $(X,\Sigma,\mu)$ будем называть пространством с мерой, где $X\in\Sigma$-единица $\sigma$-алгебры $\Sigma$, то есть $\forall A\in\Sigma$ имеем $A\subset X$.\newline
+$\textbf{Опр.5.}$ Элементы $\sigma$-алгебры назовём измеримыми множествами. Когда на данной $\sigma$-алгебре также введена мера $\mu$, элементы $\sigma$-алгебры называются измеримыми относительно меры $\mu$.\newline
+$\textbf{Опр.6.}$ Пусть $X$ и $Y$ - два произвольных множества, и пусть в них выделены две системы подмножеств $\Sigma_X\subset 2^X$ и $\Sigma_Y\subset 2^Y$ соответственно. Функция $f:X\rightarrow Y$ называется $(\Sigma_X,\Sigma_Y)$-измеримой, если $\forall A\in \Sigma_Y$ имеем $f^{-1}(A)\in \Sigma_X$.\newline
+%Так как в пространстве с мерой
+% Хотелось бы объединить структуру сигма-алгебры, топологии, учесть меру и чтобы непрерывные функции были достаточно "хороши"
+%Объединяя \newline
+$\textbf{Опр.7.}$ Пусть $(X,\Sigma,\mu)$ - пространство с мерой, $f:X\rightarrow\mathbb{C}$, на $\mathbb{C}$ введена стандартная топология, которая порождает борелевскую $\sigma$-алгебру $B(\mathbb{C})$. Тогда $(\Sigma,B(\mathbb{C}))$-измеримую функцию $f$ будем называть $\mu$-измеримой, или просто измеримой, когда мера ясна из контекста.\newline
+$\textbf{Лемма 1.}$ Пусть $k\in\mathbb{N}$, $(\mathbb{R}^k,\mathcal{T}_{\mathbb{R}^k})$- пространство $\mathbb{R}^k$ со стандартной топологией. Тогда всякое открытое множество $U\in\mathcal{T}_{\mathbb{R}^k}$ представимо в виде счётного объединения открытых брусов, то есть $U=\bigcup\limits_{m\in\mathbb{N}} I_{1m}\times ...\times I_{km}$, где $I_{rm}$ - открытые интервалы, $I_{rm}$ может равняться пустому множеству.\newline
+$\textbf{Доказательство.}$ Пусть $U\in\mathcal{T}_{\mathbb{R}^k}$. Для каждого $x\in U$ существует $r_x\in\mathbb{R_{+}}$, такой что открытый шар $U_x=B(x,r_x)=\{y\in\mathbb{R}^k|d(x,y)<r_x\}\subset U$ (определение открытого множества в метрическом пространстве)(можно сослаться на лекции функана в РУДН!!!!). Внутри каждого шара $U_x$ рассмотрим брусы $R_x$ с вершинами в рациональных точках, такие что $x\in R_x$. Брус $R_x=(a_{1x},b_{1x})\times ... \times (a_{kx},b_{kx})$ однозначно описывается $2*k$ рациональными числами, то есть $\#\{R_x|x\in U\}=\mathbb{N}$. Тогда элементы последнего множества можно перенумеровать:$\{R_x|x\in U\}=\{\widetilde{R}_i|i\in\mathbb{N}\}$.\newline
+Таким образом, так как $\forall x\in U \exists i_0\in\mathbb{N}: x\in\widetilde{R}_{i_0}$, то $U\subset\bigcup\limits_{i\in\mathbb{N}} \widetilde{R}_i$. С другой стороны, так как $\forall i\in\mathbb{N}\ \widetilde{R}_i\subset U$, то $U\supset\bigcup\limits_{i\in\mathbb{N}} \widetilde{R}_i$.\newline
+$\textbf{Лемма 2.}$ Пусть W- некоторое множество. Для произвольного индексного множества $A$, произвольной системы $(U_{\alpha}\subset W|\alpha\in A)$ и отображения $f:V\rightarrow W$ выполнено:\newline
+1. $f^{-1}(\bigcup\limits_{\alpha\in A} U_{\alpha})=\bigcup\limits_{\alpha\in A} f^{-1}(U_{\alpha})$.\newline
+2. $f^{-1}(\bigcap\limits_{\alpha\in A} U_{\alpha})=\bigcap\limits_{\alpha\in A} f^{-1}(U_{\alpha})$.\newline
+3. $\forall \alpha,\beta\in A$ имеем $f^{-1}(U_{\alpha}\setminus U_{\beta})=f^{-1}(U_{\alpha})\setminus f^{-1}(U_{\beta})$\newline
+$\textbf{Доказательство.}$ 1. $f^{-1}(\bigcup\limits_{\alpha\in A} U_{\alpha})=\{x\in V|f(x)\in \bigcup\limits_{\alpha\in A} U_{\alpha}\}=\{x\in V|\exists \alpha_0\in A: f(x)\in U_{\alpha_0}\}$.\newline
+Тогда следующая схема завершает доказательство 1:\newline
+$x\in f^{-1}(\bigcup\limits_{\alpha\in A} U_{\alpha})\Leftrightarrow x\in V: \exists\alpha_0\in A: f(x)\in U_{\alpha_0}\Leftrightarrow x\in V: \exists\alpha_0\in A: x\in f^{-1}(U_{\alpha_0})\subset V\Leftrightarrow x\in \bigcup\limits_{\alpha\in A} f^{-1}(U_{\alpha})$.\newline
+2. $f^{-1}(\bigcap\limits_{\alpha\in A} U_{\alpha})=\{x\in V|f(x)\in\bigcap\limits_{\alpha\in A} U_{\alpha}\}=\{x\in V|\forall\alpha\in A: f(x)\in U_{\alpha}\}$.\newline
+Тогда следующая схема завершает доказательство 2:\newline
+$x\in f^{-1}(\bigcap\limits_{\alpha\in A} U_{\alpha})\Leftrightarrow x\in V: \forall\alpha\in A\ f(x)\in U_{\alpha}\Leftrightarrow x\in V: \forall\alpha\in A\ x\in f^{-1}(U_{\alpha})\subset V\Leftrightarrow x\in \bigcap\limits_{\alpha\in A} f^{-1}(U_{\alpha})$.\newline
+3. $\forall \alpha,\beta\in A$ $f^{-1}(U_{\alpha}\setminus U_{\beta})=\{x\in V| f(x)\in U_{\alpha}\setminus U_{\beta}\}= \{x\in V| f(x)\in U_{\alpha}, f(x)\not\in U_{\beta}\}=$\newline
+$=f^{-1}(U_{\alpha})\bigcap (V\setminus f^{-1}(U_{\beta}))=f^{-1}(U_{\alpha})\setminus f^{-1}(U_{\beta})$.\newline
+$\textbf{Лемма 3.}$ Функция $f:X\rightarrow\mathbb{C}$ измерима тогда и только тогда, когда вещественнозначные функции $u=Ref$, $v=Imf$ являются $(\Sigma_X,B(\mathbb{R}))$-измеримыми.\newline
+$\textbf{Доказательство. Достаточность.}$ Пусть $R=I_1\times I_2$- некий брус, где $I_1,I_2$-открытые интервалы в $\mathbb{R}$.
+Тогда $R$-открыт, $R\in B(\mathbb{R}^2)$; $I_1,I_2\in B(\mathbb{R})$. Известно, что $\mathbb{C}\cong \mathbb{R}^2$, в качестве гомоморфизма можно взять $g(z)=(x,y)=(Rez,Imz)$. Покажем, что $f^{-1}(g^{-1}(R))=u^{-1}(I_1)\bigcap v^{-1}(I_2)$.\newline
+$f^{-1}(g^{-1}(R))=\{x\in\mathbb{X}|f(x)\in g^{-1}(R)\}=\{x\in\mathbb{X}|g(f(x))\in R=I_1\times I_2\}=\newline
+=\{x\in\mathbb{X}|u=Ref(x)\in I_1, v=Imf(x)\in I_2\}=\{x\in\mathbb{X}|u(x)\in I_1\}\bigcap\{x\in\mathbb{X}|v(x)\in I_2\}=u^{-1}(I_1)\bigcap v^{-1}(I_2)$\newline
+Но множества $u^{-1}(I_1),v^{-1}(I_2)$ измеримы, так как u,v $(\Sigma_X,B(\mathbb{R}))$-измеримы по условию. Следовательно, в силу замкнутости $\Sigma_X$ относительно операции объединения, множество $u^{-1}(I_1)\bigcap v^{-1}(I_2)$=$f^{-1}(g^{-1}(R))$ измеримо. Далее по лемме 1 любое множество $U\in\mathcal{T}_{\mathbb{R}^2}$ может быть представлено, как счётное объединение брусов $R_i(U),\ i\in\mathbb{N}$, и по лемме 2 получаем, что $f^{-1}(g^{-1}(U))=f^{-1}g^{-1}((\bigcup\limits_{i\in\mathbb{N}} R_i(U)))=\bigcup\limits_{i\in\mathbb{N}} f^{-1}g^{-1}((R_i(U)))$. Множество $f^{-1}(g^{-1}(U))\in\Sigma_X$, как счётное объединение множеств $f^{-1}g^{-1}((R_i(U)))\in\Sigma_X$. Таким образом, уже показано, что $\forall U\in\mathcal{T}_{\mathbb{R}^2}$ имеем $f^{-1}(g^{-1}(U))\in\Sigma_X$, а так как g- гомеоморфизм, то $\forall U\in\mathcal{T}_{\mathbb{C}}$ имеем $f^{-1}(U)\in\Sigma_X$. Затем, пользуясь операциями разности, счётного объединения, счётного пересечения множеств леммой 2 и свойствами $\Sigma_X$(забыл упомянуть свойства!!!!), получаем, что $\forall U\in B(\mathbb{C})$ имеем $f^{-1}(U)\in\Sigma_X$, а значит функция $f$ измерима.\newline
+$\textbf{Необходимость.}$ Пусть функция $f$-измерима. $Rez,Imz:\mathbb{C}\rightarrow\mathbb{R}$-непрерывные функции, то есть $\forall U\in\mathcal{T}_{\mathbb{R}}$ имеем $Re^{-1}(U)\in\mathcal{T}_{\mathbb{C}},Im^{-1}(U)\in\mathcal{T}_{\mathbb{C}}$. Тогда $u=Re\circ f, v=Im\circ f$, $\forall U\in\mathcal{T}_{\mathbb{R}}$ имеем $u^{-1}(U)=f^{-1}(Re^{-1}(U))\in \Sigma_X,\ v^{-1}(U)=f^{-1}(Im^{-1}(U))\in \Sigma_X$. Затем, пользуясь операциями разности, счётного объединения, счётного пересечения множеств, леммой 2 и свойствами $\Sigma_X$, получаем, что $\forall U\in B(\mathbb{R})$ имеем $u^{-1}(U)\in\Sigma_X,\ v^{-1}(U)\in\Sigma_X$.\newline
+$\textbf{Теор.1.}$ Если последовательность измеримых функций $f_n:X\rightarrow\mathbb{C}$ сходится к функции $f(x)$ почти всюду на $X$, то $f(x)$ также измерима.\newline
+$\textbf{Доказательство.}$ $f_n(x)\rightarrow f(x)$ почти всюду, при $n\rightarrow\infty\Leftrightarrow Ref_n(x)\rightarrow Ref(x),Imf_n(x)\rightarrow Imf(x)$ почти всюду, при $n\rightarrow\infty$.\newline
+По лемме 3 из измеримости $f_n(x)$ следует измеримость $Ref_n(x),Imf_n(x)$. Тогда по теореме 4' из [1,страница 305] получаем, что функции $Ref(x),Imf(x)$ измеримы, как пределы измеримых функций. Тогда, снова используя лемму 3, получаем, что $f(x)$ измерима.\newline
+$\textbf{Опр. 8.}$ Пусть $(E,\Sigma,\mu)$- пространство с мерой. Мера $\mu$ называется $\sigma$-конечной, если существует счётное семейство измеримых множеств $(e_i\in\Sigma|i\in\mathbb{N},\mu(e_i)<\infty)$ такое, что $E=\bigcup\limits_{i=1}^{\infty}e_i$.\newline
+
+\section{Интеграл Лебега}
+$\textbf{Опр. 9.}$ Функция $f:X\rightarrow\mathbb{C}$, определённая на некотором пространстве $X$ с заданной на нём мерой, называется простой, если она измерима и принимает не более чем счётное число значений.\newline
+$\textbf{Теор.2.}$ Функция f(x), принимающая не более чем счётное число различных значений $$y_1,...,y_n,...,$$ измерима в том и только том случае, если все множества $$A_n=\{x:f(x)=y_n\}$$ измеримы.\newline
+$\textbf{Доказательство.}$ - см. [1, страница 311]\newline
+$\textbf{Теор.3.}$ Для измеримости функции $f:X\rightarrow\mathbb{C}$ необходимо и достаточно, чтобы она могла быть представлена в виде предела равномерно сходящейся последовательности простых измеримых функций.\newline
+$\textbf{Доказательство.}$ Измеримость функции $f$ равносильна измеримости $Ref,Imf$- вещественнозначных функций. А для вещественнозначных функций теорема была доказана в [1, страница 311].\newline
+
+
+Пусть $f$ - некоторая простая функция на $X$, принимающая значения $$y_1,...,y_n,...;y_i\neq y_j\text{ при } i \neq j,$$ и пусть $A$ - некоторое измеримое подмножество $X$. Естественно определить интеграл от функции $f$ по множеству $A$ равенством $$\int\limits_A f(x)d\mu=\sum\limits_n y_n\mu(A_n),\text{ где }A_n=\{x:x\in A, f(x)=y_n\},\ (1)$$
+
+$\textbf{Опр. 10.}$ Простая функция $f$ называется интегрируемой или суммируемой (по мере $\mu$) на множестве $A$, если ряд (1) абсолютно сходится. Если $f$ интегрируема, то сумма ряда (1) называется интегралом от $f$ по множеству $A$.\newline
+$\textbf{Опр. 11.}$ Назовём функцию $f$ интегрируемой (суммируемой) на множестве A, если существует последовательность простых интегрируемых на А функций $\{f_n\}$, сходящаяся равномерно к $f$. Предел $$I=\lim\limits_{n\rightarrow\infty}\int\limits_A f_n(x)d\mu$$ обозначим $$\int\limits_A f(x)d\mu$$ и назовём интегралом функции $f$ по множеству $A$.
+
+Корректность данного определения проверяется в [1, на странице 314].\newline
+
+$\textbf{Опр. 12.}$ Пусть $E$ - некоторое измеримое множество. Для $p\in(0,\infty)$ определим пространство $$L_p(E)=\{f:E\rightarrow\mathbb{C}|\ ||f||_{L_p(E)}=(\int\limits_E |f(x)|^p d\mu)^{\frac{1}{p}}<\infty\};$$ а для $p=\infty$ пространство $$L_{\infty}(E)=\{f:E\rightarrow\mathbb{C}|\ ||f||_{L_{\infty}(E)}=\inf\limits_{E'\subset E:\mu (E\setminus E')=0}\sup\limits_{x\in E'}|f(x)|<\infty\}$$
+$\textbf{Лемма 4.}$ Если ограниченная простая функция $f:E\rightarrow\mathbb{C}$, такая что $\exists e\subset E:\mu(e)<\infty$, и $f\equiv 0$ на множестве $E\setminus e$ (то есть f исчезает), то $f\in L_p(E)\ \forall p\in(0,\infty]$.\newline
+$\textbf{Доказательство.}$ Пусть $f$ - ограниченная исчезающая простая функция, $(y_i\in\mathbb{C}| i\in\mathbb{N})$- семейство её значений (не обязательно различных). Тогда $||f||_{L_{\infty}(E)}=\max\limits_{i\in\mathbb{N}}|y_i|=:C<\infty$, следовательно, $f\in L_{\infty}(E)$. Для $p\in(0,\infty)$ рассмотрим интеграл $||f||_{L_p(E)}=(\int\limits_E |f(x)|^p d\mu)^{\frac{1}{p}}=(\int\limits_{e} |f(x)|^p d\mu)^{\frac{1}{p}}\leq (\int\limits_{e} C^p d\mu)^{\frac{1}{p}}=$\newline
+$=C*\mu(e)^{\frac{1}{p}}<\infty$. Таким образом, $f\in L_p(E)$.\newline
+$\textbf{Теор.4.}$Пусть $(E,\Sigma,\mu)$- пространство с мерой. Мера $\mu$ является $\sigma$-конечной тогда и только тогда, когда существует измеримая функция $f$ такая, что $\forall x\in E\ f(x)>0$, и $\int_E fd\mu<\infty$.\newline
+\section{Доказательство теоремы}
+$\textbf{Теор.5.}$ Пусть $(E,\Sigma,\mu)$- пространство с мерой, где $\mu$ - $\sigma$-конечная мера. Пусть также $\frac{1}{p}+\frac{1}{p'}=1,1\leq p\leq\infty$, $g$- измеримая функция. Тогда для функционала $A_g:L_p(E)\rightarrow\mathbb{C}$, $A_g(f)=\int_E fgd\mu$ имеем $||A_g||:=\sup\limits_{f\in L_p(E), ||f||_{L_p(E)}\neq 0}\frac{|A_g(f)|}{||f||_{L_p(E)}} =||g||_{L_{p'}(E)}$.\newline
+$\textbf{Доказательство.}$ Случай $g\in L_{p'}(E)$ был доказан на лекции. Рассмотрим случай $g\not\in L_{p'}(E)$, то есть $||g||_{L_{p'}(E)}=\infty$. Функция $g$ измерима, тогда по теореме 3 существует равномерно сходящаяся к $g$ последовательность простых функций $\{g_k\}_{k=1}^{\infty}$, имеем $$\forall\varepsilon>0\ \exists N\in\mathbb{N}:\ \forall k>N\ \forall x\in E\ |g(x)-g_k(x)|<\varepsilon$$
+В частности, $$\forall\varepsilon>0\ \exists N\in\mathbb{N}:\ \forall k>N\ \sup\limits_{x\in E}|g(x)-g_k(x)|<\varepsilon$$
+Далее, $$\forall\varepsilon>0\ \exists N\in\mathbb{N}:\ \forall k>N\ (g-g_k)\in L_{\infty}(E)\text{, более того, } ||g-g_k||_{L_{\infty}(E)}<\varepsilon$$
+$\forall e\subset E:\mu(e)<\infty$ имеем $L_{\infty}(e)\subset L_{p'}(e)$ \textbf{(ссылка!!!)}\newline
+$\exists N\in\mathbb{N}:\forall k>N$ имеем $||g-g_k||_{L_{p'}(e)}\leq \mu(e)^{\frac{1}{p'}}||g-g_k||_{L_{\infty}(e)}<\mu(e)^{\frac{1}{p'}}\varepsilon$\newline
+$||g_k||_{L_{p'}(e)}=||A_{g_k}^e||=\sup\limits_{f\in L_p(e), ||f||_{L_p(e)}\neq 0} \frac{|A_{g_k}^e(f)|}{||f||_{L_p(e)}}=\sup\limits_{f\in L_p(e), ||f||_{L_p(e)}\neq 0} \frac{|A_{g_k+g-g}^e(f)|}{||f||_{L_p(e)}}=\sup\limits_{f\in L_p(e), ||f||_{L_p(e)}\neq 0} \frac{|(A_{g-g_k}^e-A_{g}^e)(f)|}{||f||_{L_p(e)}}\leq ||A_{g-g_k}^e||+||A_g^e||\leq \mu(e)^{\frac{1}{p'}}\varepsilon +||A_g^e||$\newline
+При $\varepsilon\rightarrow 0$, для произвольного $e\subset E:\mu(e)<\infty$,  получаем неравенство $||g||_{L_{p'}(e)}\leq ||A_g^e|| = ||A_g||$\newline
+Если $E$ - такое множество, что $\mu(E)<\infty$, то всё доказано. Если же $\mu(E)=\infty$, то существует счётная система попарно непересекающихся множеств $(e_i\in\Sigma|i\in\mathbb{N},\mu(e_i)<\infty)$ такая, что $\bigcup\limits_{i=1}^{\infty}e_i=E$.\newline
+Тогда $||g||_{L_{p'}(E)}=\sum\limits_{i=1}^{\infty}||g||_{L_{p'}(e_i)}\leq \sum\limits_{i=1}^{\infty}||A_g^{e_i}|| = ||A_g||$.\newline
+
+
+
+
+
+
+
+\section{список литературы}
+1. Энциклопедия Britannica. История численных методов [Электронный ресурс]. URL: \url{https://www.britannica.com/science/numerical-analysis/Historical-background}\newline
+2. Дифференциальное уравнение [Электронный ресурс]: Материал из Википедии — свободной энциклопедии : Версия 1014488600, сохранённая в 11:22 UTC 27 марта 2021 / Авторы Википедии // Википедия, свободная энциклопедия. — Электрон. дан. — Сан-Франциско: Фонд Викимедиа, 2021. — URL: \url{https://en.wikipedia.org/w/index.php?title=Differential_equation&oldid=1014488600}\newline
+3. Корректно поставленная задача [Электронный ресурс] : Материал из Википедии — свободной энциклопедии : Версия 104220521, сохранённая в 23:05 UTC 28 декабря 2019 / Авторы Википедии // Википедия, свободная энциклопедия. — Электрон. дан. — Сан-Франциско: Фонд Викимедиа, 2019. — URL: \url{https://ru.wikipedia.org/?curid=2840565&oldid=104220521}\newline
+4. Устойчивость (динамические системы) [Электронный ресурс] : Материал из Википедии — свободной энциклопедии : Версия 111742919, сохранённая в 12:54 UTC 15 января 2021 / Авторы Википедии // Википедия, свободная энциклопедия. — Электрон. дан. — Сан-Франциско: Фонд Викимедиа, 2021. — URL: \url{https://ru.wikipedia.org/?curid=287781&oldid=111742919}\newline
+5. Калиткин, Н.Н. Численные методы / Н.Н. Калиткин под редакцией А.А. Самарского.- Москва: "Наука". Главная редакция физико-математической литературы, 1978. - стр.237-240\newline
+6. Ланеев, Е.Б. Устойчивое решение некорректных задач продолжения гармонических функций и их приложения в термографии и геофизике / Е.Б. Ланеев. Дисс. на соискание учёной степени доктора физико-математических наук, специальность: 05.13.18-математическое моделирование, численные методы и комплексы программ.- стр.113-122\newline
+7. Самарский А.А. Численные методы / А.А. Самарский, А.В. Гулин.- Москва: "Наука". Главная редакция физико-математической литературы, 1989.- стр. 214-215\newline
+8. Метод Рунге — Кутты // Википедия. [2020]. Дата обновления: 29.09.2020. URL: \url{https://ru.wikipedia.org/?curid=257112&oldid=109559819} (дата обращения: 29.09.2020).\newline
+9. Документация по библиотеке SciPy для языка программирования Python для научных и инженерных расчётов [Электронный ресурс]. URL: \url{https://www.scipy.org/}\newline
+10. Документация по библиотеке Ьatplotlib для языка программирования Python для построения графиков [Электронный ресурс]. URL: \url{https://matplotlib.org/}\newline
+11. Документация по библиотеке NumPy для языка программирования Python для работы с массивами [Электронный ресурс]. URL: \url{https://numpy.org/}\newline
+
+%1. \url{https://www.britannica.com/science/numerical-analysis/Historical-background (www.britanica.ru)}\newline
+%2. \url{https://en.wikipedia.org/wiki/Differential_equation}\newline
+%3. \href{https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D1%80%D1%80%D0%B5%D0%BA%D1%82%D0%BD%D0%BE_%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%BD%D0%B0%D1%8F_%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D0%B0}{https://ru.wikipedia.org/wiki/Корректно_поставленная_задача}\newline
+%4. \href{https://ru.wikipedia.org/wiki/%D0%A3%D1%81%D1%82%D0%BE%D0%B9%D1%87%D0%B8%D0%B2%D0%BE%D1%81%D1%82%D1%8C_(%D0%B4%D0%B8%D0%BD%D0%B0%D0%BC%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5_%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B)}{https://ru.wikipedia.org/wiki/Устойчивость_(динамические_системы)}\newline
+%5. Н.Н. Калиткин Численные методы стр 237-240\newline
+
+\end{document}
